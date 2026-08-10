@@ -4,6 +4,8 @@
 
 Modelar as entidades do sistema (`Categoria` e `Produto`), mapear o relacionamento entre elas e criar os repositórios JPA.
 
+![](./aula-02-diagrama-classes.png)
+
 ## Banco de dados em memória
 
 H2 é um banco de dados em memória que será utilizado para persistir os dados da aplicação. Ele é útil para testes e desenvolvimento, pois não requer configuração de um banco externo.
