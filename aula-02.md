@@ -38,7 +38,7 @@ spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 ```
 
-### Primeiro experimento:
+## Primeiro experimento(realizado na aula 02):
 
 #### PARTE 1 - Criando entidade e camada de repository
 
@@ -53,27 +53,52 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Produto {
-
-    @Id
+	
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
 
     private BigDecimal preco;
+	
+    public Produto() {
+		super();
+	}
+
+	public Produto(String nome, BigDecimal preco) {
+		super();
+		this.nome = nome;
+		this.preco = preco;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public BigDecimal getPreco() {
+		return preco;
+	}
+
+	public void setPreco(BigDecimal preco) {
+		this.preco = preco;
+	}
+
 }
 ```
 
@@ -83,12 +108,12 @@ public class Produto {
 package br.unisinos.ecommerce.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import br.unisinos.ecommerce.entity.Produto;
-@Repository
-public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
-}
+@Repository
+public interface ProdutoRepository extends JpaRepository<Produto, Long> { }
 ```
 
 #### PARTE 2 - executando
@@ -114,33 +139,48 @@ import br.unisinos.ecommerce.repository.ProdutoRepository;
 @SpringBootApplication
 public class EcommerceApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(EcommerceApplication.class, args);
-    }
-
-    @Bean
+	public static void main(String[] args) {
+		SpringApplication.run(EcommerceApplication.class, args);
+	}
+	
+	@Bean
     CommandLineRunner initDatabase(ProdutoRepository produtoRepository) {
         return args -> {
 
-            Produto produto = Produto.builder()
-                    .nome("Notebook")
-                    .preco(new BigDecimal("3500"))
-                    .build();
-
+        	Produto produto = new Produto("Notebook", "computador", BigDecimal.valueOf(144.00), 10, null); 
+           
             produtoRepository.save(produto);
         };
     }
 }
 ```
 
+## Código Oficial
+
+Vamos criar as entidades `CATEGORIA` e `PRODUTO` com relacionamento bidirecional e depois criar os repositórios JPA para cada uma delas.
+
 ### Entidade `Categoria`
 
 **Arquivo:** `src/main/java/br/unisinos/ecommerce/entity/Categoria.java`
 
 ```java
+package br.unisinos.ecommerce.entity;
+
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+
 @Entity
 @Table(name = "categoria")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Categoria {
 
     @Id
@@ -154,6 +194,34 @@ public class Categoria {
     @OneToMany(mappedBy = "categoria")
     @JsonManagedReference
     private List<Produto> produtos;
+
+	public Categoria(@NotBlank(message = "O nome da categoria é obrigatório") String nome,
+			List<Produto> produtos) {
+		super();
+		this.nome = nome;
+		this.produtos = produtos;
+	}
+
+	public Categoria() {
+		super();
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
+
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
+	}    
+    
 }
 ```
 
@@ -162,12 +230,31 @@ public class Categoria {
 **Arquivo:** `src/main/java/br/unisinos/ecommerce/entity/Produto.java`
 
 ```java
+package br.unisinos.ecommerce.entity;
+
+import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 @Entity
 @Table(name = "produto")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Produto {
-
-    @Id
+	
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -191,25 +278,137 @@ public class Produto {
     @JoinColumn(name = "id_categoria", foreignKey = @ForeignKey(name = "fk_produto_categoria"))
     @JsonBackReference
     private Categoria categoria;
+    
+    
+    public Produto() {
+		super();
+	}
+
+	public Produto(@NotBlank String nome, @Size(max = 500) String descricao,
+			@NotNull @DecimalMin(value = "0.0", inclusive = false) BigDecimal preco, @NotNull Integer estoque,
+			Categoria categoria) {
+		super();
+		this.nome = nome;
+		this.descricao = descricao;
+		this.preco = preco;
+		this.estoque = estoque;
+		this.categoria = categoria;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public BigDecimal getPreco() {
+		return preco;
+	}
+
+	public void setPreco(BigDecimal preco) {
+		this.preco = preco;
+	}
+
+	public Integer getEstoque() {
+		return estoque;
+	}
+
+	public void setEstoque(Integer estoque) {
+		this.estoque = estoque;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
 }
 ```
 
 ### Repositórios
 
 **Arquivo:** `src/main/java/br/unisinos/ecommerce/repository/CategoriaRepository.java`
+
 ```java
+package br.unisinos.ecommerce.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import br.unisinos.ecommerce.entity.Categoria;
+
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> { }
 ```
 
 **Arquivo:** `src/main/java/br/unisinos/ecommerce/repository/ProdutoRepository.java`
+
 ``` java
+package br.unisinos.ecommerce.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import br.unisinos.ecommerce.entity.Produto;
+
 @Repository
-public interface ProdutoRepository extends JpaRepository<Produto, Long> {
-}
+public interface ProdutoRepository extends JpaRepository<Produto, Long> { }
 ```
 
 `JpaRepository<T, ID>` já fornece: `save()`, `findById()`, `findAll()`, `deleteById()`, entre outros.
+
+### Testando o produto
+
+```java
+package br.unisinos.ecommerce;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import br.unisinos.ecommerce.entity.Produto;
+import br.unisinos.ecommerce.repository.ProdutoRepository;
+
+@SpringBootApplication
+public class EcommerceApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(EcommerceApplication.class, args);
+	}
+	
+	@Bean
+    CommandLineRunner initDatabase(ProdutoRepository produtoRepository) {
+        return args -> {
+
+        	Produto produto = new Produto("Notebook", "computador", BigDecimal.valueOf(144.00), 10, null); 
+           
+            produtoRepository.save(produto);
+            
+            List<Produto> listaProdutos = produtoRepository.findAll();
+            
+            for(Produto p : listaProdutos) {
+            	System.out.println(p.getNome());
+            }
+        };
+    }
+}
+```
 
 ## O que os alunos precisam fazer
 
