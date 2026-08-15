@@ -206,6 +206,10 @@ public class Categoria {
 		super();
 	}
 
+    public Long getId() {
+		return id;
+	}
+
 	public String getNome() {
 		return nome;
 	}
@@ -293,6 +297,10 @@ public class Produto {
 		this.preco = preco;
 		this.estoque = estoque;
 		this.categoria = categoria;
+	}
+
+    public Long getId() {
+		return id;
 	}
 
 	public String getNome() {
