@@ -163,9 +163,7 @@ Buscar por ID (GET)
 
 Atualizar (PUT)
 ```bash
-  curl -X PUT http://localhost:8080/categorias/1 \
-    -H "Content-Type: application/json" \
-    -d '{"nome": "Eletrônicos e Informática"}'
+  curl -X PUT http://localhost:8080/categorias/1 -H "Content-Type: application/json" -d "{\"nome\": \"Eletrônicos e Informática\"}"
 ```
 
 Excluir (DELETE)
@@ -180,12 +178,15 @@ Criar categoria (POST) - Terminal Mac
   curl -X POST http://localhost:8080/categorias \
     -H "Content-Type: application/json" \
     -d '{"nome": "Eletrônicos"}'
-``` 
+```
 
 Atualizar (PUT)
 ```bash
-  curl -X PUT http://localhost:8080/categorias/1 -H "Content-Type: application/json" -d "{\"nome\": \"Eletrônicos e Informática\"}"
+  curl -X PUT http://localhost:8080/categorias/1 \
+    -H "Content-Type: application/json" \
+    -d '{"nome": "Eletrônicos e Informática"}'
 ```
+
 
 ## Endpoints disponíveis após esta aula
 
