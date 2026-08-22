@@ -142,14 +142,14 @@ public class CategoriaController {
 }
 ```
 
-### Testes
+### Testes 
+
+Abaixo as opções para executar o comandos no terminal do Windows
 
 Criar categoria (POST)
 ```bash
-  curl -X POST http://localhost:8080/categorias \
-    -H "Content-Type: application/json" \
-    -d '{"nome": "Eletrônicos"}'
-```    
+   curl -X POST http://localhost:8080/categorias -H "Content-Type: application/json" -d "{\"nome\": \"Eletrônicos\"}"
+```
 
 Listar todas (GET)
 ```bash
@@ -171,6 +171,20 @@ Atualizar (PUT)
 Excluir (DELETE)
 ```bash
   curl -X DELETE http://localhost:8080/categorias/1
+```
+
+Obs: No terminal do MAC a execução fica da seguinte maneira:
+
+Criar categoria (POST) - Terminal Mac
+```bash
+  curl -X POST http://localhost:8080/categorias \
+    -H "Content-Type: application/json" \
+    -d '{"nome": "Eletrônicos"}'
+``` 
+
+Atualizar (PUT)
+```bash
+  curl -X PUT http://localhost:8080/categorias/1 -H "Content-Type: application/json" -d "{\"nome\": \"Eletrônicos e Informática\"}"
 ```
 
 ## Endpoints disponíveis após esta aula
