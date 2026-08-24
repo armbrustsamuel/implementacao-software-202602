@@ -17,13 +17,23 @@ A entidade `Produto` tem um relacionamento com `Categoria`. Se expusermos a enti
 **Arquivo:** `src/main/java/br/unisinos/ecommerce/dto/ProdutoRequestDTO.java`
 
 ```java
+package br.unisinos.ecommerce.dto;
+
+import java.math.BigDecimal;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public record ProdutoRequestDTO(
-    @NotBlank String nome,
-    @Size(max = 500) String descricao,
-    @NotNull @DecimalMin(value = "0.0", inclusive = false) BigDecimal preco,
-    @NotNull Integer estoque,
-    @NotNull Long categoriaId
-) {}
+	    @NotBlank String nome,
+	    @Size(max = 500) String descricao,
+	    @NotNull @DecimalMin(value = "0.0", inclusive = false) BigDecimal preco,
+	    @NotNull Integer estoque,
+	    @NotNull Long categoriaId
+	) {}
+
 ```
 
 ### `ProdutoResponseDTO` — saída
@@ -31,11 +41,16 @@ public record ProdutoRequestDTO(
 **Arquivo:** `src/main/java/br/unisinos/ecommerce/dto/ProdutoResponseDTO.java`
 
 ```java
+package br.unisinos.ecommerce.dto;
+
+import java.math.BigDecimal;
+
 public record ProdutoResponseDTO(
-    Long id, String nome, String descricao,
-    BigDecimal preco, Integer estoque,
-    Long categoriaId, String nomeCategoria
-) {}
+	    Long id, String nome, String descricao,
+	    BigDecimal preco, Integer estoque,
+	    Long categoriaId, String nomeCategoria
+	) {}
+
 ```
 
 ### `ProdutoService` (métodos principais)
@@ -117,6 +132,27 @@ public class ProdutoService {
 **Arquivo:** `src/main/java/br/unisinos/ecommerce/controller/ProdutoController.java`
 
 ```java
+package br.unisinos.ecommerce.controller;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.unisinos.ecommerce.dto.ProdutoRequestDTO;
+import br.unisinos.ecommerce.dto.ProdutoResponseDTO;
+import br.unisinos.ecommerce.service.ProdutoService;
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
