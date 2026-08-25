@@ -214,10 +214,7 @@ public class ProdutoController {
 
 Criar produto (POST)
 ```bash
-  curl -X POST http://localhost:8080/produtos \
-    -H "Content-Type: application/json" \
-    -d '{"nome": "Notebook Dell", "descricao": "Notebook i7 16GB RAM", "preco":
-  4999.99, "estoque": 10, "categoriaId": 1}'
+curl -X POST http://localhost:8080/produtos -H "Content-Type: application/json" -d "{\"nome\": \"Notebook Dell\", \"descricao\": \"Notebook i7 16GB RAM\", \"preco\": 4999.99, \"estoque\": 10, \"categoriaId\": 1}"
 ```
 
 Listar todos (GET)
@@ -232,16 +229,32 @@ Buscar por ID (GET)
 
 Atualizar (PUT)
 ```bash
-  curl -X PUT http://localhost:8080/produtos/1 \
-    -H "Content-Type: application/json" \
-    -d '{"nome": "Notebook Dell XPS", "descricao": "Notebook i9 32GB RAM",
-  "preco": 7999.99, "estoque": 5, "categoriaId": 1}'
+curl -X PUT http://localhost:8080/produtos/1 -H "Content-Type: application/json" -d "{\"nome\": \"Notebook Dell XPS\", \"descricao\": \"Notebook i9 32GB RAM\", \"preco\": 7999.99, \"estoque\": 5, \"categoriaId\": 1}"
 ```
 
 Excluir (DELETE)
 ```bash  
   curl -X DELETE http://localhost:8080/produtos/1
 ```
+
+Para usuário no terminal do MAC
+
+Criar produto (POST)
+```bash
+  curl -X POST http://localhost:8080/produtos \
+    -H "Content-Type: application/json" \
+    -d '{"nome": "Notebook Dell", "descricao": "Notebook i7 16GB RAM", "preco":
+  4999.99, "estoque": 10, "categoriaId": 1}'
+```
+
+Atualizar (PUT)
+```bash
+  curl -X PUT http://localhost:8080/produtos/1 \
+    -H "Content-Type: application/json" \
+    -d '{"nome": "Notebook Dell XPS", "descricao": "Notebook i9 32GB RAM",
+  "preco": 7999.99, "estoque": 5, "categoriaId": 1}'
+```
+
 
 ## Endpoints disponíveis após esta aula
 
