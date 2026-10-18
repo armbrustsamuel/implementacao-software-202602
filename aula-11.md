@@ -50,7 +50,7 @@ export function useListagem(carregadorPadrao) {
 import { api } from './api.js'
 
 export async function listarProdutos() {
-    const response = await api.get('/produtos/todos')
+    const response = await api.get('/produtos/listar-todos')
     return response.data
 }
 ```
