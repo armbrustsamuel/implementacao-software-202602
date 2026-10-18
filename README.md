@@ -7,4 +7,6 @@
 - [Aula 05](./aula-05.md) — Uso de Exceptions
 - [Aula 06](./aula-06.md) — Queries e filtros avançados
 - [Aula 10](./aula-10.md) — Setup do Frontend e primeira integração com o Backend
+- [Aula 11](./aula-11.md) — Melhorias interface e carregamento assíncrono
+
     
